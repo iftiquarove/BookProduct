@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import CoreData
 
 class HomeVC: UIViewController {
     //MARK: - Properties
+    var products: [Product] = []
     
     lazy var bookButton: UIButton = {
         let button = UIButton()
@@ -46,6 +48,10 @@ class HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSubviews()
+        if Utility.isEntityEmpty(.Products){
+            products = ProductWebServices.shared.getAllProducts()
+            saveDataInDB(products: products)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +68,29 @@ class HomeVC: UIViewController {
         view.backgroundColor = .white
         view.addSubview(buttonStackView)
         buttonStackView.anchor(centerX: view.centerXAnchor, centerY: view.centerYAnchor, yConstant: Utility.convertHeightMultiplier(constant: 40))
+    }
+    
+    func saveDataInDB(products: [Product]){
+        let entity = NSEntityDescription.entity(forEntityName: Entity.Products.rawValue, in: context)
+        products.forEach { product in
+            let newProduct = NSManagedObject(entity: entity!, insertInto: context)
+            newProduct.setValue(product.productName, forKey: "productName")
+            newProduct.setValue(product.productCode, forKey: "productCode")
+            newProduct.setValue(product.productType, forKey: "productType")
+            newProduct.setValue(product.productAvailibility, forKey: "productAvailibility")
+            newProduct.setValue(product.needRepair, forKey: "needRepair")
+            newProduct.setValue(product.currentDurability, forKey: "currentDurability")
+            newProduct.setValue(product.maxDurability, forKey: "maxDurability")
+            newProduct.setValue(product.mileage ?? 0, forKey: "mileage")
+            newProduct.setValue(product.price, forKey: "price")
+            newProduct.setValue(product.minimumRentDays, forKey: "minimumRentDays")
+        }
+        do {
+            try context.save()
+            print("oooo")
+        } catch {
+            print("🔴 Storing data Failed: ", error.localizedDescription)
+        }
     }
     
     //MARK: - Button Actions

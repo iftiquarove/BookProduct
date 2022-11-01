@@ -7,6 +7,7 @@
 
 import SystemConfiguration
 import UIKit
+import CoreData
 
 class Utility: NSObject{
     
@@ -66,6 +67,18 @@ class Utility: NSObject{
             }}))
         DispatchQueue.main.async {
             VC.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    //MARK: - Core data related
+    
+    class func isEntityEmpty(_ entity: Entity) -> Bool{
+        do {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
+            let count  = try context.count(for: request)
+            return count == 0
+        } catch {
+            return true
         }
     }
 }

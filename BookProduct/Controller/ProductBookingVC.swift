@@ -10,11 +10,12 @@ import UIKit
 class ProductBookingVC: UIViewController{
     //MARK: - Properties
     
+    var product: Product?
     var fromDate: String?
     var toDate: String?
     
     lazy var bookingView: ProductBookingView = {
-        let view = ProductBookingView()
+        let view = ProductBookingView(product: product!)
         view.navigationBarView.backButton.addTarget(self, action: #selector(backButtonTapped(_:)), for: .touchUpInside)
         view.confirmBookingButton.addTarget(self, action: #selector(confirmBookingTapped(_:)), for: .touchUpInside)
         view.fromDateButton.addTarget(self, action: #selector(fromDateTapped(_:)), for: .touchUpInside)
@@ -23,6 +24,15 @@ class ProductBookingVC: UIViewController{
     }()
     
     //MARK: - Initializers
+    
+    required init(product: Product) {
+        super.init(nibName: nil, bundle: nil)
+        self.product = product
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

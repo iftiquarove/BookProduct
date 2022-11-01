@@ -35,6 +35,7 @@
 		BCC9243E291174300029CAD2 /* CalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCC92436291174300029CAD2 /* CalendarView.xib */; };
 		BCC9243F291174300029CAD2 /* NSDate+CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC92437291174300029CAD2 /* NSDate+CalendarView.swift */; };
 		BCC92441291174DD0029CAD2 /* CalendarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC92440291174DD0029CAD2 /* CalendarVC.swift */; };
+		BCC92443291194E90029CAD2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC92442291194E90029CAD2 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		BCC92436291174300029CAD2 /* CalendarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarView.xib; sourceTree = "<group>"; };
 		BCC92437291174300029CAD2 /* NSDate+CalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+CalendarView.swift"; sourceTree = "<group>"; };
 		BCC92440291174DD0029CAD2 /* CalendarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVC.swift; sourceTree = "<group>"; };
+		BCC92442291194E90029CAD2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 		BC9EBA47290F986C00F7A890 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				BCC92442291194E90029CAD2 /* Constants.swift */,
 				BC9EBA48290F987A00F7A890 /* Utility.swift */,
 				BC9EBA4A290F988500F7A890 /* Extensions.swift */,
 			);
@@ -293,6 +296,7 @@
 				BCC92439291174300029CAD2 /* CalendarView.swift in Sources */,
 				BCC9242E29115BF30029CAD2 /* ProductBookingView.swift in Sources */,
 				BC9EBA4B290F988500F7A890 /* Extensions.swift in Sources */,
+				BCC92443291194E90029CAD2 /* Constants.swift in Sources */,
 				BC9EBA38290F971D00F7A890 /* BookProduct.xcdatamodeld in Sources */,
 				BC9EBA32290F971D00F7A890 /* ProductListVC.swift in Sources */,
 				BC9EBA2E290F971D00F7A890 /* AppDelegate.swift in Sources */,

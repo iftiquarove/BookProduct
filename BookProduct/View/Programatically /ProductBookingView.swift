@@ -11,6 +11,9 @@ import UIKit
 class ProductBookingView: UIView {
     
     //MARK: - Properties
+    
+    var product: Product?
+    
     lazy var navigationBarView: CustomNavigationBar = {
         let view = CustomNavigationBar()
         view.titleLabel.text = "Book A Product"
@@ -26,7 +29,7 @@ class ProductBookingView: UIView {
     
     lazy var productNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "Name: Air Compressor 12 GAS"
+        label.text = "Name: \(product?.productName ?? "N/A")"
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -36,7 +39,7 @@ class ProductBookingView: UIView {
     
     lazy var productCodeLabel : UILabel = {
         let label = UILabel()
-        label.text = "Code: p1"
+        label.text = "Code: \(product?.productCode ?? "N/A")"
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -46,17 +49,21 @@ class ProductBookingView: UIView {
     
     lazy var productAvailabilityLabel : UILabel = {
         let label = UILabel()
-        label.text = "Available: True"
+        label.text = "Available: \(product?.productAvailibility ?? false)"
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textAlignment = .center
-        label.textColor = .black
         label.adjustsFontSizeToFitWidth = true
+        if product?.productAvailibility ?? false{
+            label.textColor = .systemGreen
+        }else{
+            label.textColor = .systemRed
+        }
         return label
     }()
     
     lazy var productRapairStatusLabel : UILabel = {
         let label = UILabel()
-        label.text = "Need To Repair: False"
+        label.text = "Need To Repair: \(product?.needRepair ?? false)"
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -66,7 +73,7 @@ class ProductBookingView: UIView {
     
     lazy var productMaxDurabilityLabel : UILabel = {
         let label = UILabel()
-        label.text = "Max Durability: 3000"
+        label.text = "Max Durability: \(product?.maxDurability ?? 0)"
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -76,7 +83,7 @@ class ProductBookingView: UIView {
     
     lazy var productCurrentDurabilityLabel : UILabel = {
         let label = UILabel()
-        label.text = "Current Durability: 1000"
+        label.text = "Current Durability: \(product?.currentDurability ?? 0)"
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -84,9 +91,9 @@ class ProductBookingView: UIView {
         return label
     }()
     
-    lazy var productMileage : UILabel = {
+    lazy var productMileageLabel : UILabel = {
         let label = UILabel()
-        label.text = "Mileage: N/A"
+        label.text = "Mileage: \(product?.mileage ?? 0)"
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -96,7 +103,7 @@ class ProductBookingView: UIView {
     
     lazy var productRentLabel : UILabel = {
         let label = UILabel()
-        label.text = "Product Rent Per Day: 5000"
+        label.text = "Product Rent Per Day: \(product?.price ?? 0)"
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textAlignment = .center
         label.textColor = .black
@@ -158,15 +165,15 @@ class ProductBookingView: UIView {
         return button
     }()
     
-    let paddingTop = Utility.convertHeightMultiplier(constant: 20)
-    
+    let paddingTop = Utility.convertHeightMultiplier(constant: 15)
     
     //MARK: - Initializers
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    required init(product: Product) {
+        super.init(frame: .zero)
+        self.product = product
         setUpSubviews()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -198,8 +205,16 @@ class ProductBookingView: UIView {
         addSubview(productCurrentDurabilityLabel)
         productCurrentDurabilityLabel.anchor(top: productMaxDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
         
-        addSubview(productRentLabel)
-        productRentLabel.anchor(top: productCurrentDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+        if product?.productType == PRODUCT_TYPE.plain.rawValue{
+            addSubview(productRentLabel)
+            productRentLabel.anchor(top: productCurrentDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+        }else{
+            addSubview(productMileageLabel)
+            productMileageLabel.anchor(top: productCurrentDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+            
+            addSubview(productRentLabel)
+            productRentLabel.anchor(top: productMileageLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+        }
         
         addSubview(BookingTitle)
         BookingTitle.anchor(top: productRentLabel.bottomAnchor, centerX: centerXAnchor, paddingTop: Utility.convertHeightMultiplier(constant: 30))
