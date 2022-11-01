@@ -34,6 +34,33 @@ extension UIViewController {
             activityIndicator?.removeFromSuperview()
         }
     }
+    
+    func showToast(message : String, font: UIFont = .systemFont(ofSize: 15, weight: .medium)) {
+        DispatchQueue.main.async {
+            let toastLabel = UILabel()
+            self.view.addSubview(toastLabel)
+            toastLabel.font = font
+            toastLabel.backgroundColor = .darkGray
+            toastLabel.text = message
+            toastLabel.textAlignment = .center
+            toastLabel.textColor = .red
+            toastLabel.sizeToFit()
+            
+            toastLabel.translatesAutoresizingMaskIntoConstraints = false
+            toastLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+            toastLabel.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -(10)).isActive = true
+            toastLabel.widthAnchor.constraint(equalToConstant: toastLabel.frame.width + 20).isActive = true
+            toastLabel.heightAnchor.constraint(equalToConstant: toastLabel.frame.height + 20).isActive = true
+            toastLabel.layer.cornerRadius = Utility.convertHeightMultiplier(constant: 12)
+            toastLabel.clipsToBounds = true
+            
+            UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {
+                toastLabel.alpha = 0.0
+            }, completion: {(isCompleted) in
+                toastLabel.removeFromSuperview()
+            })
+        }
+    }
 }
 
 extension UIView {
@@ -84,3 +111,30 @@ extension UIView {
     }
 }
 
+extension Date {
+    init(_ dateString:String) {
+        let dateStringFormatter = DateFormatter()
+        dateStringFormatter.dateFormat = "yyyy-MM-dd"
+        dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+        let date = dateStringFormatter.date(from: dateString)!
+        self.init(timeInterval:0, since:date)
+    }
+    
+    var month: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM"
+        return dateFormatter.string(from: self)
+    }
+    
+    var year: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        return dateFormatter.string(from: self)
+    }
+    
+    var day: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd"
+        return dateFormatter.string(from: self)
+    }
+}
