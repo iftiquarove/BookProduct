@@ -81,4 +81,19 @@ class Utility: NSObject{
             return true
         }
     }
+    
+    //MARK: - Cost Calculation
+    
+    class func daysBetween(start: Date, end: Date) -> Int {
+        let start = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: start)!
+        let end = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: end)!
+        return Calendar.current.dateComponents([.day], from: start, to: end).day ?? 0
+    }
+    
+    class func bookingCostCalculation(forDays: Int, type: PRODUCT_TYPE, cost: Int) -> Int{
+        switch type{
+        case .plain: return cost*forDays
+        case .meter: return (cost*10)*forDays
+        }
+    }
 }

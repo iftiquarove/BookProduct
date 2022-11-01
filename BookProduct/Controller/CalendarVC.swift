@@ -24,7 +24,7 @@ class CalendarVC: UIViewController {
         return view
     }()
     
-    var callBack: ((_ selectedDate: String) -> Void)?
+    var callBack: ((_ selectedDate: Date) -> Void)?
 
     
     //MARK: - Initializers
@@ -83,13 +83,16 @@ class CalendarVC: UIViewController {
 
 extension CalendarVC: CalendarViewDelegate {
     func calendarView(_ calendarView: CalendarView, didUpdateBeginDate beginDate: Date?) {
-        let dateString = "\(beginDate?.year ?? "")-\(beginDate?.month ?? "")-\(beginDate?.day ?? "")"
-        callBack?(dateString)
+        if beginDate ?? Date() < Date(){
+            showToast(message: "Can't select Past dates")
+            return
+        }
+        callBack?(beginDate ?? Date())
         dismiss(animated: true)
     }
     
     func calendarView(_ calendarView: CalendarView, didUpdateFinishDate finishDate: Date?) {
-        
+        return
     }
 }
 

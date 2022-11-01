@@ -290,6 +290,8 @@ extension CalendarView: UICollectionViewDataSource, UICollectionViewDelegateFlow
             state = .end
         } else if let beginIndex = beginIndex, let endIndex = endIndex, indexPath.row > beginIndex && indexPath.row < endIndex {
             state = .range
+        } else if date < Date(){
+            state = .disabled
         } else {
             state = .normal
         }

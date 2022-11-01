@@ -11,8 +11,8 @@ class ProductBookingVC: UIViewController{
     //MARK: - Properties
     
     var product: Product?
-    var fromDate: String?
-    var toDate: String?
+    var fromDate: Date?
+    var toDate: Date?
     
     lazy var bookingView: ProductBookingView = {
         let view = ProductBookingView(product: product!)
@@ -63,28 +63,53 @@ class ProductBookingVC: UIViewController{
         let vc = CalendarVC()
         vc.callBack = {[weak self] selectedDate in
             self?.fromDate = selectedDate
-            self?.bookingView.fromDateButton.setTitle(selectedDate, for: .normal)
+            let dateString = "\(selectedDate.year)-\(selectedDate.month)-\(selectedDate.day)"
+            self?.bookingView.fromDateButton.setTitle(dateString, for: .normal)
         }
         self.present(vc, animated: true)
     }
     
     @IBAction @objc func toDateTapped(_ sender: UIButton){
+        guard let fromDate = fromDate else {
+            showToast(message: "select from date first!")
+            return
+        }
+        
         let vc = CalendarVC()
         vc.callBack = {[weak self] selectedDate in
+            if selectedDate <= fromDate{
+                self?.showToast(message: "Invalid date!")
+                return
+            }
+            
             self?.toDate = selectedDate
-            self?.bookingView.toDateButton.setTitle(selectedDate, for: .normal)
+            let dateString = "\(selectedDate.year)-\(selectedDate.month)-\(selectedDate.day)"
+            self?.bookingView.toDateButton.setTitle(dateString, for: .normal)
         }
         self.present(vc, animated: true)
     }
     
     @IBAction @objc func confirmBookingTapped(_ sender: UIButton){
-        guard let _ = fromDate, let _ = toDate else {
+        guard let fromDate = fromDate, let toDate = toDate else {
             showToast(message: "Please select date first")
             return
         }
         
-        let alert = UIAlertController(title: "Confirm Booking", message: "Your total payemnt will be $500", preferredStyle: .alert)
+        let daysBetween = Utility.daysBetween(start: fromDate, end: toDate)
+        if daysBetween < product?.minimumRentDays ?? 0{
+            showToast(message: "Please meet the minimumum Rent Days")
+            return
+        }
         
+        var totalAmount = 0
+        if product?.productType == PRODUCT_TYPE.plain.rawValue{
+            totalAmount = Utility.bookingCostCalculation(forDays: daysBetween, type: .plain, cost: product?.price ?? 0)
+        }else{
+            totalAmount = Utility.bookingCostCalculation(forDays: daysBetween, type: .meter, cost: product?.price ?? 0)
+        }
+        
+        
+        let alert = UIAlertController(title: "Confirm Booking", message: "Your total payemnt will be $\(totalAmount)", preferredStyle: .alert)
         let confirmButton = UIAlertAction(title: "Confirm", style: .cancel, handler: { action in
            
         })

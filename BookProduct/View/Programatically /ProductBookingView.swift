@@ -101,9 +101,24 @@ class ProductBookingView: UIView {
         return label
     }()
     
+    
+    lazy var minimumRentLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Minimum rent day: \(product?.minimumRentDays ?? 0)"
+        label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        label.textAlignment = .center
+        label.textColor = .black
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
+    
     lazy var productRentLabel : UILabel = {
         let label = UILabel()
-        label.text = "Product Rent Per Day: \(product?.price ?? 0)"
+        if product?.productType == PRODUCT_TYPE.meter.rawValue{
+            label.text = "Product Rent Per Meter: \(product?.price ?? 0)"
+        }else{
+            label.text = "Product Rent Per Day: \(product?.price ?? 0)"
+        }
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textAlignment = .center
         label.textColor = .black
@@ -205,12 +220,15 @@ class ProductBookingView: UIView {
         addSubview(productCurrentDurabilityLabel)
         productCurrentDurabilityLabel.anchor(top: productMaxDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
         
+        addSubview(minimumRentLabel)
+        minimumRentLabel.anchor(top: productCurrentDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+        
         if product?.productType == PRODUCT_TYPE.plain.rawValue{
             addSubview(productRentLabel)
-            productRentLabel.anchor(top: productCurrentDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+            productRentLabel.anchor(top: minimumRentLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
         }else{
             addSubview(productMileageLabel)
-            productMileageLabel.anchor(top: productCurrentDurabilityLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
+            productMileageLabel.anchor(top: minimumRentLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
             
             addSubview(productRentLabel)
             productRentLabel.anchor(top: productMileageLabel.bottomAnchor, left: leftAnchor, paddingTop: paddingTop, paddingLeft: 20)
@@ -232,7 +250,7 @@ class ProductBookingView: UIView {
         toDateButton.anchor(left: toDateLabel.rightAnchor, centerY: toDateLabel.centerYAnchor, paddingLeft: 20)
         
         addSubview(confirmBookingButton)
-        confirmBookingButton.anchor(top: toDateLabel.bottomAnchor, centerX: centerXAnchor, paddingTop: Utility.convertHeightMultiplier(constant: 40), width: 200, height: 40)
+        confirmBookingButton.anchor(top: toDateLabel.bottomAnchor, centerX: centerXAnchor, paddingTop: Utility.convertHeightMultiplier(constant: 30), width: 200, height: 40)
     }
     
     //MARK: - Button Actions
