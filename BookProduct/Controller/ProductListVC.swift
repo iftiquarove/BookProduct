@@ -58,7 +58,7 @@ class ProductListVC: UIViewController {
         print("🕜 Fetching Data !")
         var products = [Product]()
         let context = appDelegate.persistentContainer.viewContext
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Products")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: Entity.Products.rawValue)
         request.returnsObjectsAsFaults = true
         do {
             let result = try context.fetch(request)
@@ -100,6 +100,12 @@ extension ProductListVC: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: productView.productCellIdentifier, for: indexPath) as! ProductCell
         cell.productNameLabel.text = products[indexPath.row].productName
         cell.productCodeLabel.text = products[indexPath.row].productCode
+        cell.productAvailabilityLabel.text = "Product Available: \(products[indexPath.row].productAvailibility ?? false)"
+        if products[indexPath.row].productAvailibility ?? false{
+            cell.productAvailabilityLabel.textColor = .systemGreen
+        }else{
+            cell.productAvailabilityLabel.textColor = .systemRed
+        }
         return cell
     }
     

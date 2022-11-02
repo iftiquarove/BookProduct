@@ -96,4 +96,15 @@ class Utility: NSObject{
         case .meter: return (cost*10)*forDays
         }
     }
+    
+    class func returnCostCalculation(forDays: Int, type: PRODUCT_TYPE, cost: Int, currentDuribility: Int) -> (cost: Int, currentDuribility: Int){
+        switch type{
+        case .plain:
+            let duribility = currentDuribility - (1*forDays)
+            return (cost*forDays,duribility)
+        case .meter:
+            let duribility = currentDuribility - (2*forDays)
+            return ((cost*10)*forDays,duribility)
+        }
+    }
 }
