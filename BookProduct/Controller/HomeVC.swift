@@ -87,7 +87,7 @@ class HomeVC: UIViewController {
         }
         do {
             try context.save()
-            print("oooo")
+            print("🟢 saved")
         } catch {
             print("🔴 Storing data Failed: ", error.localizedDescription)
         }

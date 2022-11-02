@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ProductBookingVC: UIViewController{
     //MARK: - Properties
@@ -54,6 +55,55 @@ class ProductBookingVC: UIViewController{
         bookingView.fillSuperView()
     }
     
+    private func bookAProduct(product: Product){
+        let product = BookingProduct(productName: product.productName, productCode: product.productCode, productType: product.productType, productAvailibility: product.productAvailibility, needRepair: product.needRepair, currentDurability: product.currentDurability, maxDurability: product.maxDurability, mileage: product.mileage, price: product.price, minimumRentDays: product.minimumRentDays, bookingDate: fromDate, returnDate: toDate)
+        
+        saveDataInDB(product: product)
+    }
+    
+    func saveDataInDB(product: BookingProduct){
+        // Save booking product in `BookingProducts` table
+        let entity = NSEntityDescription.entity(forEntityName: Entity.BookingProducts.rawValue, in: context)
+        let newProduct = NSManagedObject(entity: entity!, insertInto: context)
+        newProduct.setValue(product.productName, forKey: "productName")
+        newProduct.setValue(product.productCode, forKey: "productCode")
+        newProduct.setValue(product.productType, forKey: "productType")
+        newProduct.setValue(product.productAvailibility, forKey: "productAvailibility")
+        newProduct.setValue(product.needRepair, forKey: "needRepair")
+        newProduct.setValue(product.currentDurability, forKey: "currentDurability")
+        newProduct.setValue(product.maxDurability, forKey: "maxDurability")
+        newProduct.setValue(product.mileage ?? 0, forKey: "mileage")
+        newProduct.setValue(product.price, forKey: "price")
+        newProduct.setValue(product.minimumRentDays, forKey: "minimumRentDays")
+        newProduct.setValue(product.bookingDate, forKey: "bookingDate")
+        newProduct.setValue(product.returnDate, forKey: "returnDate")
+        // ***************** ********************* *******************
+        
+        
+        // Update the product availibity to false as already booked
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Entity.Products.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "productCode = %@", product.productCode!)
+        let results = try? context.fetch(fetchRequest) as? [NSManagedObject]
+        if results?.count == 0 {
+           // here you are inserting
+        } else {
+           // here you are updating
+            results?[0].setValue(false, forKey: "productAvailibility")
+        }
+        // ################## #################### ##################
+
+        do {
+            try context.save()
+            print("🟢 saved")
+            DispatchQueue.main.async {[self] in
+                Utility.showAlert(self, "Success", "Booking succesfully completed!")
+                navigationController?.popToRootViewController(animated: true)
+            }
+        } catch {
+            print("🔴 Storing data Failed: ", error.localizedDescription)
+        }
+    }
+    
     //MARK: - Button Actions
     @IBAction @objc func backButtonTapped(_ sender: UIButton){
         navigationController?.popViewController(animated: true)
@@ -90,6 +140,12 @@ class ProductBookingVC: UIViewController{
     }
     
     @IBAction @objc func confirmBookingTapped(_ sender: UIButton){
+        if !(product?.productAvailibility ?? false){
+            Utility.showAlert(self, "Warning", " Product not available at this moment!")
+            return
+        }
+        
+        
         guard let fromDate = fromDate, let toDate = toDate else {
             showToast(message: "Please select date first")
             return
@@ -110,8 +166,9 @@ class ProductBookingVC: UIViewController{
         
         
         let alert = UIAlertController(title: "Confirm Booking", message: "Your total payemnt will be $\(totalAmount)", preferredStyle: .alert)
-        let confirmButton = UIAlertAction(title: "Confirm", style: .cancel, handler: { action in
-           
+        let confirmButton = UIAlertAction(title: "Confirm", style: .cancel, handler: {[weak self] action in
+            guard let self = self, let product = self.product else {return}
+            self.bookAProduct(product: product)
         })
         
         let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: { action in

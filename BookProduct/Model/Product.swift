@@ -14,6 +14,7 @@ enum PRODUCT_TYPE: String, Codable{
 
 enum Entity: String{
     case Products
+    case BookingProducts
 }
 
 struct Product: Codable{
@@ -40,4 +41,19 @@ struct Product: Codable{
         case price = "price"
         case minimumRentDays = "minimum_rent_period"
     }
+}
+
+struct BookingProduct: Codable{
+    var productName: String?
+    var productCode: String?
+    var productType: String?
+    var productAvailibility: Bool?
+    var needRepair: Bool?
+    var currentDurability: Int?
+    var maxDurability: Int?
+    var mileage: Int? = 0
+    var price: Int?
+    var minimumRentDays: Int?
+    var bookingDate: Date?
+    var returnDate: Date?
 }
