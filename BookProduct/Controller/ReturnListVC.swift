@@ -94,6 +94,11 @@ class ReturnListVC: UIViewController {
 
 extension ReturnListVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if products.count == 0 {
+            tableView.setEmptyMessage("No product to return")
+        }else{
+            tableView.restore()
+        }
         return products.count
     }
     
